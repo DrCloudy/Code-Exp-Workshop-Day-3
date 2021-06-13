@@ -1,16 +1,29 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useEffect} from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Entypo } from "@expo/vector-icons";
 
-function notesScreen() {
+function notesScreen({ navigation }) {
+  
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity>
+          <Entypo name="new-message" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  });
+
   return <View style={styles.container}></View>
 }
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
