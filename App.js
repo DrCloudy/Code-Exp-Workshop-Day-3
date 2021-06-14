@@ -12,6 +12,33 @@ function notesScreen({ navigation, route }) {
   
   const [ notes, setNotes ] = useState([]);
 
+  function refreshNotes() {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM notes",
+        null,
+        (txObj, { rows: { _array } }) => setNotes(_array),
+        (txObj, error) => console.log("Error ", error)
+      );
+    });
+  }
+
+  // Create the DB on first run
+  useEffect(() => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(`
+        CREATE TABLE IF NOT EXISTS notes
+        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          done INT);
+      `);
+      },
+      null,
+      refreshNotes
+    );
+  }, []);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -23,13 +50,22 @@ function notesScreen({ navigation, route }) {
   });
 
   useEffect(() => {
-    if (route.params?.todoText){
-      const newNote = {
-        title: route.params.todoText,
-        id: notes.length.toString(),
-        done: false,
-      };
-      setNotes([...notes, newNote]);
+    if (route.params?.todoText) {
+      // const newNote = {
+      //   title: route.params.todoText,
+      //   id: notes.length.toString(),
+      //   done: false,
+      // };
+      // setNotes([...notes, newNote]);
+      db.transaction(
+        (tx) => {
+          tx.executeSql("INSERT INTO notes (done, title) VALUES (0, ?)", [
+            route.params.todoText,
+          ]);
+        },
+        null,
+        refreshNotes
+      );
     }
   }, [route.params?.todoText]);
   
