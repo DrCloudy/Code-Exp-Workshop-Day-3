@@ -21,7 +21,7 @@ function notesScreen({ navigation }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.headerIcon} onPress={() => {navigation.navigate("Add")}}>
           <Entypo name="new-message" size={24} color="black" />
         </TouchableOpacity>
       ),
@@ -41,16 +41,29 @@ function notesScreen({ navigation }) {
 
 const Stack = createStackNavigator();
 
-export default function App() {
+function addScreen(){
+  return (<Text>New Screen</Text>);
+}
+const NotesStack = createStackNavigator();
 
+function notesStackScreen(){
+  return (
+    <NotesStack.Navigator>
+      <NotesStack.Screen name="Notes" component={notesScreen} options={{
+        headerTitle: "Notes App",
+        headerTitleStyle: styles.headerTitleStyle,
+        headerStyle: styles.headerStyle,
+      }} />
+    </NotesStack.Navigator>
+  )
+}
+
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Notes" component={notesScreen} options = {{
-          headerTitle: "Notes",
-          headerStyle: styles.headerStyle,
-          headerTitleStyle: styles.headerTitleStyle,
-        }} />
+      <Stack.Navigator mode="modal" headerMode="none" >
+        <Stack.Screen name="Notes" component={notesStackScreen} options={{ headerShown: false, }} />
+        <Stack.Screen name="Add" component={addScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -75,13 +88,17 @@ const styles = StyleSheet.create({
   itemStyle: {
     height: 60,
     justifyContent: "center",
-    paddingLeft: 20,
-    fontSize: 24,
-     borderColor: 'pink',
+    fontSize: 30,
+    borderBottomColor: 'black',
     borderWidth: 1,
+    textAlign: 'center',
+    marginBottom: 0,
   },
   listStyle: {
     width: "100%",
   },
+  headerIcon: {
+    paddingRight: 10,
+  }
 });
  
