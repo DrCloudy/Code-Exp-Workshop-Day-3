@@ -14,7 +14,7 @@ const SAMPLE_NOTES = [
   { title: "four", id: "3", done: false },
 ];
 
-function notesScreen({ navigation }) {
+function notesScreen({ navigation, route }) {
   
   const [ notes, setNotes ] = useState(SAMPLE_NOTES);
 
@@ -27,6 +27,10 @@ function notesScreen({ navigation }) {
       ),
     });
   });
+
+  useEffect(() => {
+    console.log(route.params?.todoText);
+  }, [route.params?.todoText]);
   
   function renderItem({ item }){
     return <Text style={styles.listItem}>{item.title}</Text>;
@@ -51,8 +55,9 @@ function addScreen({ navigation }){
         style={styles.textInput}
         onChangeText={(text) => setTodoText(text)}
       />
-      <Button title="Submit" onPress={() => navigation.goBack()} />
+      <Button title="Submit" onPress={() => navigation.navigate("NotesStackScreen", { todoText })} />
       <Button title="Back" onPress={() => navigation.goBack()} />
+      <Text>{ todoText }</Text> 
     </View>
   );
 }
@@ -62,7 +67,7 @@ const NotesStack = createStackNavigator();
 function notesStackScreen(){
   return (
     <NotesStack.Navigator>
-      <NotesStack.Screen name="Notes" component={notesScreen} options={{
+      <NotesStack.Screen name="NotesStackScreen" component={notesScreen} options={{
         headerTitle: "Notes App",
         headerTitleStyle: styles.headerTitleStyle,
         headerStyle: styles.headerStyle,
@@ -119,6 +124,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     padding: 10,
     marginTop: 10,
+    textAlign: 'center'
   }
 });
  
