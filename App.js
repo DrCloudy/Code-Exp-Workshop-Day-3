@@ -7,16 +7,10 @@ import { Entypo } from "@expo/vector-icons";
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('notes.db');
-const SAMPLE_NOTES = [
-  { title: "one", id: "0", done: false },
-  { title: "two", id: "1", done: false },
-  { title: "three", id: "2", done: false },
-  { title: "four", id: "3", done: false },
-];
 
 function notesScreen({ navigation, route }) {
   
-  const [ notes, setNotes ] = useState(SAMPLE_NOTES);
+  const [ notes, setNotes ] = useState([]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,7 +23,14 @@ function notesScreen({ navigation, route }) {
   });
 
   useEffect(() => {
-    console.log(route.params?.todoText);
+    if (route.params?.todoText){
+      const newNote = {
+        title: route.params.todoText,
+        id: notes.length.toString(),
+        done: false,
+      };
+      setNotes([...notes, newNote]);
+    }
   }, [route.params?.todoText]);
   
   function renderItem({ item }){
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: 'center',
     marginBottom: 0,
+    paddingTop: 10,
   },
   list: {
     width: "100%",
@@ -127,4 +129,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
- 
