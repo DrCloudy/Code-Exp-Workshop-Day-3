@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, FlatList, Button, TextInput } from 'react-native';
 import { Entypo } from "@expo/vector-icons";
 import * as SQLite from 'expo-sqlite';
 
@@ -29,21 +29,34 @@ function notesScreen({ navigation }) {
   });
   
   function renderItem({ item }){
-    return <Text style={styles.itemStyle}>{item.title}</Text>;
+    return <Text style={styles.listItem}>{item.title}</Text>;
   }
  
   return (
     <View style={styles.container}>
-      <FlatList style={styles.listStyle} data={notes} renderItem={renderItem} />
+      <FlatList style={styles.list} data={notes} renderItem={renderItem} />
     </View>
   )
 }
 
 const Stack = createStackNavigator();
 
-function addScreen(){
-  return (<Text>New Screen</Text>);
+function addScreen({ navigation }){
+  const [todoText, setTodoText] = useState("");
+  
+  return (
+    <View style={styles.container}>
+      <Text>Add Your Notes</Text>
+      <TextInput
+        style={styles.textInput}
+        onChangeText={(text) => setTodoText(text)}
+      />
+      <Button title="Submit" onPress={() => navigation.goBack()} />
+      <Button title="Back" onPress={() => navigation.goBack()} />
+    </View>
+  );
 }
+
 const NotesStack = createStackNavigator();
 
 function notesStackScreen(){
@@ -85,7 +98,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingBottom: 30,
   },
-  itemStyle: {
+  listItem: {
     height: 60,
     justifyContent: "center",
     fontSize: 30,
@@ -94,11 +107,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 0,
   },
-  listStyle: {
+  list: {
     width: "100%",
   },
   headerIcon: {
     paddingRight: 10,
+  },
+  textInput: {
+    backgroundColor: "white",
+    width: "90%",
+    borderColor: "black",
+    padding: 10,
+    marginTop: 10,
   }
 });
  
